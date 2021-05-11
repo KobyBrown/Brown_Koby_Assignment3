@@ -1,0 +1,45 @@
+<!--Koby Brown-->
+<!--Template from W3 schools as well as Assignement screencast-->
+<!--Create Registration page. -->
+
+<script>
+    // the code below from the screencast on how to get started on assignment 2
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+
+<body>
+    <script>
+      // Generates register form
+      document.write(`<form action="process_register${location.search}" method="post">`)
+  </script>
+      <div class="login">
+        <h1>Register Your Account!</h1>
+        <p>Please fill in this form to create an account.</p>
+        <script>
+          document.write(`<form action="process_register${location.search}" method="post">`)
+      </script>
+          <!-- Creates input boxes for their account info -->
+          <p><input type="text" placeholder="Enter username" name="uname" id="uname" required></p>
+          <p><input type="text" placeholder="Enter Email" name="email" id="email" required></p>
+          <p><input type="password" placeholder="Enter Password" name="psw" id="psw" required></p>
+          <p><input type="password" placeholder="Repeat Password" name="pswRepeat" id="pswRepeat" required></p>
+          <p class="submit"><input type="submit" name="commit" value="Login"></p>
+        </form>
+      </div>
+      
+      <div class="login-help">
+        <script>
+          // sends to login.html if those who already have account
+          document.write(`<p>Already have an account? <a href="login.html${location.search}">Sign In!</a></p>`);
+         </script>
+      </div>
+</body>
+</html>
