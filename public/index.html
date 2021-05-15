@@ -1,48 +1,174 @@
 <!--Koby Brown-->
 <!--Smart Phone 3 code modeified-->
 <!--Homepage image where costumers can enter by clicking on image.-->
+<script>
+  var cart = sessionStorage // sets sessionStorage to cart var
+  var username = getCookie("username") // stores "username" cookie into username
+
+// Function to Get a Cookie - Taken from https://www.w3schools.com/js/js_cookies.asp
+// Decodes and splits cookie
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+// Function code taken from post by Jan on stackoverflow - https://stackoverflow.com/questions/179355/clearing-all-cookies-with-javascript
+// Deletes all cookies that were generated from login - this allows website to log people in and out of the site
+function deleteCookies() {
+    var cookies = document.cookie.split("; ");
+    for (var c = 0; c < cookies.length; c++) {
+        var d = window.location.hostname.split(".");
+        while (d.length > 0) {
+            var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+            var p = location.pathname.split('/');
+            document.cookie = cookieBase + '/';
+            while (p.length > 0) {
+                document.cookie = cookieBase + p.join('/');
+                p.pop();
+            };
+            d.shift();
+        }
+    }
+    alert("You Have Successfully Logged Out! Please Come Again!")
+    cart.clear() // clears cart of products
+    window.location.reload()
+};
+
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bat Boys</title>
-    <style>
-        body {
-            text-align: center;
-            background: turquoise;
-        }
-
-
-        img {
-            border: 1px solid #ddd;
-            /* Gray border */
-            border-radius: 4px;
-            /* Rounded border */
-            padding: 5px;
-            /* Some padding */
-            width: 350px;
-            /* Set a small width */
-        }
-
-        /* Add a hover effect (blue shadow) */
-        img:hover {
-            box-shadow: 0 0 5px 1px white;
-        }
-    </style>
+  <title>Baseball Store -Homepage</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default rounded borders and increase the bottom margin */ 
+    .navbar {
+      margin-bottom: 100px;
+      border-radius: 0;
+    }
+    
+    /* Remove the jumbotron's default bottom margin */ 
+     .jumbotron {
+      margin-bottom: 0;
+    }
+   
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+  </style>
 </head>
 <body>
-    <body>
-        <h1>Bat Boys</h1>
-        <h2><small> What The Pros Use!</small></h2>
-        <a href="./products_display.html">
-            <img src="Pujols.jpg" height="50%" width="50%">
-        </a>
-        <h3>
-            Please click on the image to enter my bat store. Hi, my name is Koby Brown and I just launched my very first bat store. We have a wide selection of wood bats and even have what the pros use!
-    </h3>
-    </body>
-    </html>
+
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>Baseball Store</h1>      
+    <h2>Bats, Cleats, Gloves and Extra Equipment</h2>
+    <h3>
+    <script>
+        if (username != "") { // if logged in then display message with their username and say they logged in
+          document.write(`
+          <p class="w3-center">Welcome to the Baseball Store ${username}! You Are Currently Logged In!</p>`)
+          } else { // else tell them to login or register
+            document.write(`
+          <p class="w3-center">Welcome to the Baseball Store! You Are Not Logged In! Please Login Or Register An Account!</p> `)
+          }
+          if (cart.length != "") { // if cart has stuff then say how many of the different types of products are in it
+             document.write(`
+          <p class="w3-center">You Currently Have ${cart.length} Types of Products In Your Shopping Cart</p>`)
+          } else { // else tell them to add stuff to cart
+            document.write(` 
+          <p class="w3-center">Your Shopping Cart Is Currently Empty! Please Add Some Products To Your Shopping Cart Before Checking Out!</p>`)
+          }
+    </script></h3>
+  </div>
+  <!--Nav Bar Properties-->
+</div>
+  </script
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">Homepage</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="bats.html">Bats</a></li>
+        <li><a href="cleats.html">Cleats</a></li>
+        <li><a href="gloves.html">Gloves</a></li>
+        <li><a href="extra_equipment.html">Extra Equipment</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="login.html"><span class="glyphicon glyphicon-user"></span>login</a></li>
+        <li><a href="register.html">Registar</a></li>
+        <li><a href="cart.html"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+<div class="container">  
+  <!--Preview Images with linked pictures-->  
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Bats!</div>
+        <div class="panel-body"><a href="bats.html"><img src="Pujols.jpg" class="img-responsive" style="width:auto" alt="Image"></div>
+        <div class="panel-footer">Please click on the image or nav bar for our baseball bats page!</div>
+      </div>
+    </div>
+    <div class="col-sm-4"> 
+      <div class="panel panel-primary">
+        <div class="panel-heading">Cleats!</div>
+        <div class="panel-body"><a href="cleats.html"><img src="nike.jpg" class="img-responsive" style="width:auto" alt="Image"></div>
+        <div class="panel-footer">Please click on the image or nav bar for our baseball cleats page!</div>
+      </div>
+      </div>
+      <div class="col-sm-4"> 
+      <div class="panel panel-primary">
+        <div class="panel-heading">Gloves!</div>
+        <div class="panel-body"><a href="gloves.html"><img src="rawlingsglove.jpg" class="img-responsive" style="width: auto;" alt="Image"></div>
+        <div class="panel-footer">Please click on the image or nav bar for our baseball gloves page!</div>
+      </div>
+    </div>
+    <div class="col-sm-4"> 
+      <div class="panel panel-primary">
+        <div class="panel-heading">Extra Equipment!</div>
+        <div class="panel-body"><a href="extra_equipment.html"><img src="oakley.jpg" class="img-responsive" style="width:auto" alt="Image"></div>
+        <div class="panel-footer">Please click on the image or nav bar for our baseball extra equipment page!</div>
+      </div>
+</div><br>
+</div>
+</div>
+<footer>
+  <!--VIP email but not linked to anything-->
+<footer class="container-fluid text-center">
+  <p>Online Store Copyright</p>  
+  <form class="form-inline">Get deals: 
+    <input type="email" class="form-control" size="50" placeholder="Email Address">
+    <button type="button" class="btn btn-danger">Sign Up</button>
+  </form>
+</footer>
 </body>
 </html>

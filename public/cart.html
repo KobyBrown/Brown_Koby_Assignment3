@@ -1,0 +1,193 @@
+<script src="products.js" type="text/javascript"></script>
+<!-- Links to my products array within products.js -->
+<!-- code above taken from Assignment 1 instructions -->
+
+<!-- Code take from example code provided in Assignment1 Instructions -->
+<script>
+
+var cart = sessionStorage
+
+// Function to Get a Cookie
+//Taken from https://www.w3schools.com/js/js_cookies.asp
+// Decodes and splits cookie
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+// Creats function to add another product to the cart
+function addProduct(theProduct, theIndex) { 
+    var rowQuantity = parseInt(sessionStorage.getItem(`${theProduct}${theIndex}`)); // Finds particular rows product quantity
+    rowQuantity += 1 // adds one to product quantity
+    sessionStorage.setItem(`${theProduct}${theIndex}`, rowQuantity); // sets new product quantity
+    window.location.reload() // reload page
+}
+
+// Creates function to remove a product from the cart
+function removeProduct(theProduct, theIndex) { 
+    var rowQuantity = parseInt(sessionStorage.getItem(`${theProduct}${theIndex}`)); // Finds particular rows product quantity
+        rowQuantity -= 1 // removes one from quantity
+        sessionStorage.setItem(`${theProduct}${theIndex}`, rowQuantity); // sets new product quantity
+        window.location.reload() // reload page
+}
+
+// Creates function to Clear Product From Cart
+function clearProduct(theProduct, theIndex) { 
+    var rowQuantity = parseInt(sessionStorage.getItem(`${theProduct}${theIndex}`)); // Finds particular rows product quantity
+    rowQuantity = 0 // clears quantity
+    sessionStorage.setItem(`${theProduct}${theIndex}`, rowQuantity);// sets new product quantity
+    window.location.reload() // reload page
+}
+
+// Creates a purchase function that blocks checkout if not logged in
+// checkout initiates the emailing of the invoice
+function purchase() {
+  var cartUser = getCookie("username");
+  if (cartUser == '') {
+    alert("Please Login To Complete Your Purchase!")
+    window.location.href='login.html'
+  } else if (cart.length == 0) {
+    alert("You Have Not Selected Any Products! Please Return To Store And Select A Product!")
+  } else {
+    fetch("/checkout?cartData="+JSON.stringify(cart)+"&cookieData="+JSON.stringify(document.cookie), 
+            {
+                method: "POST"
+            }).then(function (res) {
+                return res.text()
+            }).then(function (data) {
+                document.write(data)
+            })
+            alert(`Thank You For Your Purchase ${cartUser}! The Following Invoice Has Been Emailed To You!`)
+        }
+}
+
+// clears cart/sessionStorage of all data and refreshes the page
+function clearCart() {
+  cart.clear()
+  window.location.reload()
+}
+
+</script>
+
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="">
+<title>Invoice</title>
+</head>
+<body>
+<table border="2">
+    <tbody>
+        <script>
+          // checks if there's anything in the cart. If not sends them back to the page they were on
+          if (cart.length == 0) {
+            alert("You Have No Products In Your Cart! Please Add Products To Continue!")
+            window.history.back();
+          }
+
+            document.write(`
+      <tr>
+        <th style="text-align: center;" width="43%">Item</th>
+        <th style="text-align: center;" width="15%">Quantity</th>
+        <th style="text-align: center;" width="9%">Price</th>
+        <th style="text-align: center;" width="54%">Extended Price</th>
+      </tr>
+      `)
+
+      // Code taken from Invoice4 and modified while referring to example code from Assignment1 Instructions
+      // Displays Purchased items
+      subtotal = 0;
+      for (product in products) {
+          for (i = 0; i < products[product].length; i++) {
+            quantity = cart.getItem(`${product}${i}`)
+            if (quantity > 0) {
+              extended_price = quantity * products[product][i].price
+              subtotal += extended_price;
+              document.write(`
+      <tr>
+        <td width="43%">${products[product][i].name}</td>
+        <td align="center" width="11%">${quantity}
+        <input type="button" class="button alt" value="+" onclick="addProduct('${product}',${i})">
+        <input type="button" class="button alt" value="-" onclick="removeProduct('${product}',${i})">
+        <input type="button" class="button alt" value="Clear" onclick="clearProduct('${product}',${i})"></td>
+        <td width="13%">\$${products[product][i].price}</td>
+        <td width="54%">\$${extended_price}</td>
+      </tr>
+      `)
+}
+}
+}
+
+// All code below taken from Invoice4 modified
+// Compute Sales Tax
+var tax = 0.0575;
+var tax_amount = subtotal * tax;
+// Compute Shipping Fee depending on Subtotal amount
+var shipping_fee;
+var small_fee = 2;
+var medium_fee = 5;
+var large_fee = 0.05;
+if (subtotal < 50) {
+  shipping_fee = small_fee;
+}
+else if (subtotal >= 50 && subtotal < 100) {
+  shipping_fee = medium_fee;
+}
+else if (subtotal >= 100) {
+  shipping_fee = subtotal * large_fee;
+}
+
+// Compute the Grand Total
+var grand_total = subtotal + tax_amount + shipping_fee;
+var cartUser = getCookie("username");
+
+      // Displays receipt
+      document.write(`
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
+        <td width="54%">\$${subtotal.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%">Tax @ 5.75%</span></td>
+        <td width="54%">\$${tax_amount.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%">Shipping</span></td>
+        <td width="54%">\$${shipping_fee.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
+        <td width="54%"><strong>\$${grand_total.toFixed(2)}</strong></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%"><strong>OUR SHIPPING POLICY IS:A subtotal $0 - $49.99 will be $2 shipping A subtotal $50 - $99.99 will be $5 shipping Subtotals over $100 will be charged 5% of the subtotal amount</strong></td>
+        <td style="text-align: center;" width="54%"><H1>Thanks For Browsing ${cartUser}! Please Confirm Purchase Below If You Would Like To Checkout!</H1></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%"><input type="button" value="Clear Cart!" onclick="clearCart()"></td>
+        <td style="text-align: center;" width="54%"><H1><input type="button" value="Confirm Purchase!" onclick="purchase()"></H1></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;" colspan="3" width="67%"><input type="button" value="Back to Store!" onclick="history.back()"></td>
+      </tr>
+        `)
+    </script>
+    </tbody>
+  </table>      
+</body>
+</html>
