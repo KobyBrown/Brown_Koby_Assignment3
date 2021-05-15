@@ -150,7 +150,7 @@ app.get("/logout", function (req, res) {
   });
 
   var mailOptions = {
-    from: 'kobyah@hawaii.com',
+    from: 'kobyah@hawaii.edu',
     to: user_email,
     subject: 'Koby Baseball Store',
     html: invoice_str
@@ -200,6 +200,7 @@ app.post('/process_register', function (request, response, next) {
     
     // USERNAME VALIDATION:
     // Checks to make sure there are no special char in username
+    //Referenced from classmates including Vincent Wang.
     var unameRegex = /^[A-Za-z0-9]+$/
     // emailRegex checks to make sure that it is valid email
     var emailRegex = /[0-9a-zA-Z]+@[0-9a-zA-Z]+[\.]{1}[0-9a-zA-Z]+[\.]?[0-9a-zA-Z]+/g;
